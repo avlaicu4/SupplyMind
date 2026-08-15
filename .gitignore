@@ -1,0 +1,7 @@
+venv/
+__pycache__/
+*.pyc
+.env
+procure_ai.db
+.idea/
+.DS_Store
