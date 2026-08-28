@@ -1,7 +1,14 @@
 import os
 
 from dotenv import load_dotenv
-from openai import OpenAI
+from openai import (
+    APIConnectionError,
+    AuthenticationError,
+    NotFoundError,
+    OpenAI,
+    OpenAIError,
+    RateLimitError,
+)
 
 from .inventory_services import generate_reorder_recommendations
 
@@ -29,18 +36,35 @@ def ask_inventory_agent(user_message: str, db):
     recommendations = generate_reorder_recommendations(db)
     client = OpenAI()
 
-    response = client.responses.create(
-        model=OPENAI_MODEL,
-        instructions=SYSTEM_PROMPT,
-        input=[
-            {
-                "role": "user",
-                "content": (
-                    f"User question: {user_message}\n\n"
-                    f"Inventory recommendations from backend: {recommendations}"
-                ),
-            },
-        ],
-    )
+    try:
+        response = client.responses.create(
+            model=OPENAI_MODEL,
+            instructions=SYSTEM_PROMPT,
+            input=[
+                {
+                    "role": "user",
+                    "content": (
+                        f"User question: {user_message}\n\n"
+                        f"Inventory recommendations from backend: {recommendations}"
+                    ),
+                },
+            ],
+        )
 
-    return response.output_text
+        return response.output_text
+    except AuthenticationError:
+        return "OpenAI authentication failed. Check if OPENAI_API_KEY is correct."
+    except NotFoundError:
+        return (
+            f"OpenAI model '{OPENAI_MODEL}' was not found or is not available "
+            "for your account. Try setting OPENAI_MODEL to another model."
+        )
+    except RateLimitError:
+        return (
+            "OpenAI rate limit or quota was reached. Check your OpenAI billing "
+            "and usage limits."
+        )
+    except APIConnectionError:
+        return "Could not connect to OpenAI. Check your internet connection."
+    except OpenAIError as error:
+        return f"OpenAI API error: {error}"
