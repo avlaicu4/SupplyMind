@@ -39,7 +39,7 @@ function AiChat({ apiUrl }) {
     <section className="ai-chat-panel">
       <div className="section-header">
         <h2>AI Assistant</h2>
-        <span>Ollama agent</span>
+        <span>Hosted AI agent</span>
       </div>
 
       <form className="ai-chat-form" onSubmit={handleSubmit}>

@@ -36,6 +36,8 @@ Environment variables:
 
 ```text
 CORS_ORIGINS=https://your-frontend-url.vercel.app
+OPENAI_API_KEY=your_openai_api_key_here
+OPENAI_MODEL=gpt-5.6-luna
 ```
 
 After deployment, copy the public backend URL. It should look like:
@@ -78,14 +80,14 @@ VITE_API_URL=https://your-backend-url.example.com
 
 Use the real backend URL from Railway or Render.
 
-## Important AI Note
+## Hosted AI
 
-The local Ollama model runs on your Mac, so a cloud backend cannot reach it automatically.
+The AI assistant uses the OpenAI API from the backend.
 
-For a public cloud demo, choose one:
+Create an API key in the OpenAI dashboard and add it only to the backend cloud service:
 
-1. Keep AI chat as a local-only feature and deploy the rest of the app.
-2. Replace Ollama with a hosted LLM API for the cloud version.
-3. Deploy Ollama separately on a server with enough CPU/RAM.
+```text
+OPENAI_API_KEY=your_openai_api_key_here
+```
 
-For an interview MVP, option 1 is acceptable if you explain it clearly.
+Do not add the OpenAI API key to Vercel or frontend code.

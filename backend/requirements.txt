@@ -2,5 +2,6 @@ fastapi
 uvicorn
 sqlalchemy
 pydantic
-ollama
+openai
+python-dotenv
 mcp[cli]
