@@ -1,20 +1,20 @@
 import os
 
-from dotenv import load_dotenv
-from openai import (
+from anthropic import (
     APIConnectionError,
+    APIError,
+    Anthropic,
     AuthenticationError,
     NotFoundError,
-    OpenAI,
-    OpenAIError,
     RateLimitError,
 )
+from dotenv import load_dotenv
 
 from .inventory_services import generate_reorder_recommendations
 
 load_dotenv()
 
-OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-5.6-luna")
+ANTHROPIC_MODEL = os.getenv("ANTHROPIC_MODEL", "claude-haiku-4-5")
 
 
 SYSTEM_PROMPT = (
@@ -27,20 +27,21 @@ SYSTEM_PROMPT = (
 
 
 def ask_inventory_agent(user_message: str, db):
-    if not os.getenv("OPENAI_API_KEY"):
+    if not os.getenv("ANTHROPIC_API_KEY"):
         return (
-            "OpenAI API key is not configured. "
-            "Set OPENAI_API_KEY in the backend environment to enable the hosted AI assistant."
+            "Claude API key is not configured. "
+            "Set ANTHROPIC_API_KEY in the backend environment to enable the hosted AI assistant."
         )
 
     recommendations = generate_reorder_recommendations(db)
-    client = OpenAI()
+    client = Anthropic()
 
     try:
-        response = client.responses.create(
-            model=OPENAI_MODEL,
-            instructions=SYSTEM_PROMPT,
-            input=[
+        response = client.messages.create(
+            model=ANTHROPIC_MODEL,
+            max_tokens=600,
+            system=SYSTEM_PROMPT,
+            messages=[
                 {
                     "role": "user",
                     "content": (
@@ -51,20 +52,26 @@ def ask_inventory_agent(user_message: str, db):
             ],
         )
 
-        return response.output_text
+        text_blocks = [
+            block.text
+            for block in response.content
+            if getattr(block, "type", None) == "text"
+        ]
+
+        return "\n".join(text_blocks).strip()
     except AuthenticationError:
-        return "OpenAI authentication failed. Check if OPENAI_API_KEY is correct."
+        return "Claude authentication failed. Check if ANTHROPIC_API_KEY is correct."
     except NotFoundError:
         return (
-            f"OpenAI model '{OPENAI_MODEL}' was not found or is not available "
-            "for your account. Try setting OPENAI_MODEL to another model."
+            f"Claude model '{ANTHROPIC_MODEL}' was not found or is not available "
+            "for your account. Try setting ANTHROPIC_MODEL to another model."
         )
     except RateLimitError:
         return (
-            "OpenAI rate limit or quota was reached. Check your OpenAI billing "
+            "Claude rate limit or quota was reached. Check your Anthropic billing "
             "and usage limits."
         )
     except APIConnectionError:
-        return "Could not connect to OpenAI. Check your internet connection."
-    except OpenAIError as error:
-        return f"OpenAI API error: {error}"
+        return "Could not connect to Claude. Check your internet connection."
+    except APIError as error:
+        return f"Claude API error: {error}"

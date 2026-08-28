@@ -2,7 +2,7 @@
 
 FastAPI backend for the SupplyMind procurement assistant.
 
-The AI assistant uses a hosted OpenAI model through the OpenAI API.
+The AI assistant uses a hosted Claude model through the Anthropic API.
 
 ## Run the API
 
@@ -28,8 +28,8 @@ http://127.0.0.1:8000/docs
 Local environment variables:
 
 ```bash
-export OPENAI_API_KEY="your_api_key_here"
-export OPENAI_MODEL="gpt-5.6-luna"
+export ANTHROPIC_API_KEY="your_api_key_here"
+export ANTHROPIC_MODEL="claude-haiku-4-5"
 ```
 
 ## Run the MCP server

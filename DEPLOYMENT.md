@@ -36,8 +36,8 @@ Environment variables:
 
 ```text
 CORS_ORIGINS=https://your-frontend-url.vercel.app
-OPENAI_API_KEY=your_openai_api_key_here
-OPENAI_MODEL=gpt-5.6-luna
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
+ANTHROPIC_MODEL=claude-haiku-4-5
 ```
 
 After deployment, copy the public backend URL. It should look like:
@@ -82,12 +82,13 @@ Use the real backend URL from Railway or Render.
 
 ## Hosted AI
 
-The AI assistant uses the OpenAI API from the backend.
+The AI assistant uses the Anthropic API from the backend.
 
-Create an API key in the OpenAI dashboard and add it only to the backend cloud service:
+Create an API key in the Anthropic Console and add it only to the backend cloud service:
 
 ```text
-OPENAI_API_KEY=your_openai_api_key_here
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
+ANTHROPIC_MODEL=claude-haiku-4-5
 ```
 
-Do not add the OpenAI API key to Vercel or frontend code.
+Do not add the Anthropic API key to Vercel or frontend code.
