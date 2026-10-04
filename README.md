@@ -2,7 +2,7 @@
 
 SupplyMind is a full-stack procurement and inventory planning application for small businesses. It helps a business monitor stock levels, identify low-stock products, compare suppliers, generate reorder recommendations, and create draft purchase orders.
 
-The project was built as an interview-ready AI developer portfolio application with a Python backend, a React frontend, a hosted Claude AI assistant, and MCP tools for agent integrations.
+SupplyMind is a personal learning project for exploring how to connect LLMs to real business data. It combines a Python backend, a React frontend, a hosted Claude AI assistant, and MCP tools for agent integrations.
 
 ## Live Demo
 
@@ -235,7 +235,7 @@ POST /purchase-orders
 PATCH /purchase-orders/{purchase_order_id}/status
 ```
 
-## Interview Talking Points
+## Design Highlights
 
 - The project separates frontend, backend, AI integration, and MCP tooling.
 - The React frontend does not call the AI provider directly, which keeps secrets out of browser code.
